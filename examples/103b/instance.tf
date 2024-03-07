@@ -1,37 +1,3 @@
-data "terraform_remote_state" "project01" {
-  backend = "s3"
-  config = {
-    bucket   = "ramoni-terraform-states"
-    region   = "sa-east-1"
-    key      = "myproject01.tfstate"     
-  }
-}
-
-data "aws_ami" "amazon_linux_ami" {
-  most_recent      = true
-
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-*"]
-  }
-
-  filter {
-    name   = "root-device-type"
-    values = ["ebs"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  filter {
-    name   = "architecture"
-    values = ["arm64"]
-  }
-}
-output "amazon_linux_ami" { value = data.aws_ami.amazon_linux_ami.id }
-
 resource "aws_instance" "my_instance" {
   ami           = data.aws_ami.amazon_linux_ami.id 
   instance_type = "t4g.nano"
